@@ -1,6 +1,8 @@
 # app-variaveis-ambiente
 
-Este projeto é um exemplo didático para demonstrar o uso e a configuração de variáveis de ambiente em aplicações Node.js executando em Kubernetes.
+Projeto de exemplo para demonstrar o uso de variáveis de ambiente em aplicações Node.js rodando em Kubernetes, utilizando ConfigMap e Secret.
+
+---
 
 ## Sumário
 
@@ -10,17 +12,19 @@ Este projeto é um exemplo didático para demonstrar o uso e a configuração de
 - [Docker](#docker)
 - [Kubernetes](#kubernetes)
   - [ConfigMap](#configmap)
+  - [Secret](#secret)
   - [Deployment](#deployment)
   - [Service](#service)
 - [Execução Local](#execução-local)
 - [Execução no Kubernetes (k3d)](#execução-no-kubernetes-k3d)
 - [Comandos Úteis](#comandos-úteis)
+- [Autor](#autor)
 
 ---
 
 ## Descrição
 
-A aplicação expõe variáveis de ambiente via Node.js, sendo ideal para testes e demonstrações em ambientes de orquestração como Kubernetes.
+A aplicação expõe variáveis de ambiente via Node.js, sendo ideal para testes e demonstrações em ambientes de orquestração como Kubernetes. O projeto mostra como utilizar ConfigMap e Secret para injetar variáveis de ambiente em containers.
 
 ---
 
@@ -31,6 +35,7 @@ app-variaveis-ambiente/
 │
 ├── k8s/
 │   ├── configmal.yaml      # ConfigMap com variáveis de ambiente
+│   ├── secret.yaml         # Secret com variáveis sensíveis/base64
 │   ├── deploymnet.yaml     # Deployment e Service do Kubernetes
 │
 ├── src/
@@ -50,6 +55,8 @@ A aplicação utiliza as seguintes variáveis de ambiente:
 - `APP_NAME` — Nome da aplicação
 - `APP_VERSION` — Versão da aplicação
 - `APP_AUTHOR` — Nome do autor
+
+Essas variáveis podem ser fornecidas via ConfigMap ou Secret.
 
 ---
 
@@ -75,10 +82,6 @@ docker run -e APP_NAME="Minha App" -e APP_VERSION="1.0.0" -e APP_AUTHOR="Seu Nom
 
 Arquivo: `k8s/configmal.yaml`
 
-#### Criação maunal
-
-kubectl create configmap app-variaveis-ambiente-config --from-literal=APP_NAME="Aplicação Exemplo via YAML" --from-literal=APP_VERSION="1.0.0" --from-literal=APP_AUTHOR="Olavo Alexandrino"
-
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -94,6 +97,28 @@ Criação via comando:
 
 ```sh
 kubectl apply -f k8s/configmal.yaml
+```
+
+### Secret
+
+Arquivo: `k8s/secret.yaml`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-variaveis-ambiente-secret
+type: Opaque
+data:
+  APP_NAME: QXBsaWNhw6fDo28gRXhlbXBsbyB2aWEgWU1MIC0gcGVsbyBzZWNyZXQ=
+  APP_VERSION: MS4wLjY1OA==
+  APP_AUTHOR: T2xhdm8gQWxlYW5kcmlubw==
+```
+
+Criação via comando:
+
+```sh
+kubectl apply -f k8s/secret.yaml
 ```
 
 ### Deployment
@@ -124,18 +149,18 @@ spec:
           env:
             - name: APP_NAME
               valueFrom:
-                configMapKeyRef:
-                  name: app-variaveis-ambiente-config
+                secretKeyRef:
+                  name: app-variaveis-ambiente-secret
                   key: APP_NAME
             - name: APP_VERSION
               valueFrom:
-                configMapKeyRef:
-                  name: app-variaveis-ambiente-config
+                secretKeyRef:
+                  name: app-variaveis-ambiente-secret
                   key: APP_VERSION
             - name: APP_AUTHOR
               valueFrom:
-                configMapKeyRef:
-                  name: app-variaveis-ambiente-config
+                secretKeyRef:
+                  name: app-variaveis-ambiente-secret
                   key: APP_AUTHOR
 ```
 
@@ -183,9 +208,10 @@ spec:
    k3d image import oalexandrino/app-variaveis-ambiente:v1 -c meu-cluster
    ```
 
-2. **Aplique o ConfigMap:**
+2. **Aplique o ConfigMap e Secret:**
    ```sh
    kubectl apply -f k8s/configmal.yaml
+   kubectl apply -f k8s/secret.yaml
    ```
 
 3. **Aplique o Deployment e Service:**
@@ -217,12 +243,9 @@ spec:
   ```sh
   kubectl delete -f k8s/deploymnet.yaml
   kubectl delete -f k8s/configmal.yaml
+  kubectl delete -f k8s/secret.yaml
   ```
 
 ---
 
 ## Autor
-
-Olavo Alexandrino
-
----

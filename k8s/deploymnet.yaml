@@ -24,19 +24,20 @@ spec:
           env:
             - name: APP_NAME
               valueFrom:
-                configMapKeyRef:
-                  name: app-variaveis-ambiente-config
+                secretKeyRef:
+                  name: app-variaveis-ambiente-secret
                   key: APP_NAME
             - name: APP_VERSION
               valueFrom:
-                configMapKeyRef:
-                  name: app-variaveis-ambiente-config
+                secretKeyRef:
+                  name: app-variaveis-ambiente-secret
                   key: APP_VERSION
             - name: APP_AUTHOR
               valueFrom:
-                configMapKeyRef:
-                  name: app-variaveis-ambiente-config
+                secretKeyRef:
+                  name: app-variaveis-ambiente-secret
                   key: APP_AUTHOR
+
 ---
 # Service para expor o app-variaveis-ambiente
 apiVersion: v1
