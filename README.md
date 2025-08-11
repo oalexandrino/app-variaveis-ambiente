@@ -9,3 +9,7 @@ APP_NAME => Nome da aplicação
 APP_VERSION => Versão da aplicação
 
 APP_AUTHOR => Nome do autor
+
+Comando configmap:
+
+kubectl create configmap app-variaveis-ambiente-config --from-literal=APP_NAME="Aplicação Exemplo via YAML" --from-literal=APP_VERSION="1.0.0" --from-literal=APP_AUTHOR="Olavo Alexandrino"
