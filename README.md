@@ -229,3 +229,5 @@ spec:
 ---
 
 ## Autor
+
+Olavo Alexandrino forked from https://github.com/KubeDev/app-variaveis-ambiente
