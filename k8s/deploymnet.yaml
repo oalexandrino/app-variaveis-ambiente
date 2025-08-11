@@ -21,14 +21,9 @@ spec:
           imagePullPolicy: IfNotPresent  # Não tenta baixar a imagem se já estiver presente
           ports:
             - containerPort: 3000  # Porta exposta pelo container
-          env:
-            - name: APP_NAME
-              value: "Aplicação Exemplo via YAML"
-            - name: APP_VERSION
-              value: "1.0.0"
-            - name: APP_AUTHOR
-              value: "Olavo Alexandrino"
-
+          envFrom:
+            - configMapRef:
+                name: app-variaveis-ambiente-config  # Referência ao ConfigMap criado
 ---
 # Service para expor o app-variaveis-ambiente
 apiVersion: v1
