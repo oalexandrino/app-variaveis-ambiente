@@ -1,0 +1,48 @@
+# Deployment do app-variaveis-ambiente
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-variaveis-ambiente
+  labels:
+    app: app-variaveis-ambiente
+spec:
+  replicas: 1  # Número de pods a serem executados
+  selector:
+    matchLabels:
+      app: app-variaveis-ambiente  # Seleciona pods com este label
+  template:
+    metadata:
+      labels:
+        app: app-variaveis-ambiente
+    spec:
+      containers:
+        - name: app-variaveis-ambiente
+          image: oalexandrino/app-variaveis-ambiente:v1  # Imagem do container carregada localmente
+          imagePullPolicy: IfNotPresent  # Não tenta baixar a imagem se já estiver presente
+          ports:
+            - containerPort: 3000  # Porta exposta pelo container
+          env:
+            - name: APP_NAME
+              value: "Aplicação Exemplo via YAML"
+            - name: APP_VERSION
+              value: "1.0.0"
+            - name: APP_AUTHOR
+              value: "Olavo Alexandrino"
+
+---
+# Service para expor o app-variaveis-ambiente
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-variaveis-ambiente
+  labels:
+    app: app-variaveis-ambiente
+spec:
+  selector:
+    app: app-variaveis-ambiente  # Seleciona pods com este label
+  type: NodePort  # Expõe o serviço em uma porta do node
+  ports:
+    - protocol: TCP
+      port: 80         # Porta do serviço dentro do cluster
+      targetPort: 3000 # Porta do container para receber o tráfego
+      nodePort: 30000  # Porta exposta no node para acesso externo
