@@ -24,7 +24,8 @@ spec:
           envFrom:
             - secretRef:
                 name: app-variaveis-ambiente-secret  # Referência ao Secret
-
+            - configMapRef:
+                name: app-variaveis-ambiente-config  # Referência ao ConfigMap criado                
 ---
 # Service para expor o app-variaveis-ambiente
 apiVersion: v1

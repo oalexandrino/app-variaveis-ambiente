@@ -3,6 +3,4 @@ kind: ConfigMap
 metadata:
   name: app-variaveis-ambiente-config
 data:
-  APP_NAME: "Aplicação Exemplo via YAML"
-  APP_VERSION: "1.0.52"
-  APP_AUTHOR: "Olavo Alexandrino" 
+  APP_AUTHOR: "Olavo" 
