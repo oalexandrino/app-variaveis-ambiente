@@ -21,9 +21,22 @@ spec:
           imagePullPolicy: IfNotPresent  # Não tenta baixar a imagem se já estiver presente
           ports:
             - containerPort: 3000  # Porta exposta pelo container
-          envFrom:
-            - configMapRef:
-                name: app-variaveis-ambiente-config  # Referência ao ConfigMap criado
+          env:
+            - name: APP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-variaveis-ambiente-config
+                  key: APP_NAME
+            - name: APP_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: app-variaveis-ambiente-config
+                  key: APP_VERSION
+            - name: APP_AUTHOR
+              valueFrom:
+                configMapKeyRef:
+                  name: app-variaveis-ambiente-config
+                  key: APP_AUTHOR
 ---
 # Service para expor o app-variaveis-ambiente
 apiVersion: v1
