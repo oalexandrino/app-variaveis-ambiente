@@ -21,22 +21,9 @@ spec:
           imagePullPolicy: IfNotPresent  # Não tenta baixar a imagem se já estiver presente
           ports:
             - containerPort: 3000  # Porta exposta pelo container
-          env:
-            - name: APP_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-variaveis-ambiente-secret
-                  key: APP_NAME
-            - name: APP_VERSION
-              valueFrom:
-                secretKeyRef:
-                  name: app-variaveis-ambiente-secret
-                  key: APP_VERSION
-            - name: APP_AUTHOR
-              valueFrom:
-                secretKeyRef:
-                  name: app-variaveis-ambiente-secret
-                  key: APP_AUTHOR
+          envFrom:
+            - secretRef:
+                name: app-variaveis-ambiente-secret  # Referência ao Secret
 
 ---
 # Service para expor o app-variaveis-ambiente
